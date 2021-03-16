@@ -6,12 +6,12 @@
 #    By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/15 12:49:31 by xamartin          #+#    #+#              #
-#    Updated: 2021/03/16 14:35:13 by xamartin         ###   ########lyon.fr    #
+#    Updated: 2021/03/16 19:17:18 by xamartin         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
 #Compiler and Linker
-# CXX          := g++ default already to g++
+# CXX          := g++
 
 #The Target Binary Program
 TARGET      := npuzzle
