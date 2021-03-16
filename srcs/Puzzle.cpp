@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/15 12:16:15 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/16 16:10:58 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/03/16 21:47:06 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,19 @@ Puzzle::~Puzzle(void)
 ** Public Methods
 */
 
+void Puzzle::_ () const
+{
+	std::cout << "need print heuristic" << std::endl;
+	std::cout << "----" << std::endl;
+	for (size_t i = 0; i < this->grid.size(); i++)
+	{
+		if (i != 0 && (i % this->size) == 0)
+			std::cout << std::endl;
+		std::cout << this->grid[i];
+	}
+	std::cout << std::endl << "----" << std::endl;
+}
+
 std::vector<int> Puzzle::move_left(const int z, Puzzle p)
 {
 	if ((z % p.size) == 0)
@@ -86,7 +99,7 @@ std::vector<int> Puzzle::move_down(const int z, Puzzle p)
 	return p.grid;
 }
 
-std::vector<int>	Puzzle::run(int i, const int z, Puzzle p)
+std::vector<int>	Puzzle::move(int i, const int z, Puzzle p)
 {
 	return (this->*moves[i])(z, p);
 }

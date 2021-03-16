@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/15 12:16:15 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/16 16:26:17 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/03/16 21:49:24 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,13 @@
 
 NPuzzleHandler::NPuzzleHandler(const std::string &name)
 {
-	Puzzle tmp(3);
-	p = &tmp;
+	p = new Puzzle(3);
 	prog_name = name;
 }
 
 NPuzzleHandler::~NPuzzleHandler(void)
 {
-	return ;
+	delete p;
 }
 
 /*
@@ -97,6 +96,7 @@ int	NPuzzleHandler::_parse_file(const std::string &file_name)
 {
 	if (file_name.empty())
 		return (0);
+	std::cout << "Exit Parser - puzzle file open and parsed" << std::endl;
 	return (0);
 }
 
@@ -106,15 +106,11 @@ int NPuzzleHandler::_generate_puzzle(const int size)
 	std::vector<int> v(max, 0);
 
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-	std::cout << "Enter 1" << std::endl;
     std::default_random_engine e(seed);
-	std::cout << "Enter 2" << std::endl;
 	std::generate(v.begin(), v.end(), [n = 0] () mutable { return n++; });
-	std::cout << "Enter 3" << std::endl;
 	std::shuffle(std::begin(v), std::end(v), e);
-	std::cout << "Enter 4" << std::endl;
 	this->p->grid = v;
-	std::cout << "Enter 5" << std::endl;
+	std::cout << "Exit Parser - puzzle genrated" << std::endl;
 	return (1);
 }
 
@@ -134,8 +130,7 @@ int NPuzzleHandler::parser()
 int	NPuzzleHandler::solve()
 {
 	std::cout << "Enter Solve" << std::endl;
-
-	
+	this->a_star(this->p);
 	std::cout << "Exit Solve" << std::endl;
 	return (0);
 }
