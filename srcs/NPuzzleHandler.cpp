@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/15 12:16:15 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/16 21:49:24 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/03/17 16:45:19 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,102 +16,87 @@
 ** Constructor - Destructor Methods
 */
 
-NPuzzleHandler::NPuzzleHandler(const std::string &name)
+NPuzzleHandler::NPuzzleHandler(const int s, const std::string &file_name) : puzzle_file(file_name)
 {
-	p = new Puzzle(3);
-	prog_name = name;
+	p = new Puzzle(s);
+	solution = new Puzzle(s);
 }
 
 NPuzzleHandler::~NPuzzleHandler(void)
 {
 	delete p;
-}
-
-/*
-** Override Methods
-*/
-
-void		NPuzzleHandler::print_usage() const
-{
-	std::cerr << "Usage: " << this->prog_name << std::endl;
-	std::cerr << std::endl << "Puzzle resolver using A* search algorithm" << std::endl;
-	std::cerr << "\t-f, --puzzle_file\t\tPuzzle file to resolve, override generate_puzzle option" << std::endl;
-	std::cerr << "\t-s, --puzzle_size\t\tSize of generated puzzle, must be a int >= 3, default value 3" << std::endl;
-	std::cerr << "\t-g, --generate_puzzle\t\tGenerate a [puzzle_size] puzzle" << std::endl;
-}
-
-int		NPuzzleHandler::parse_command_line(int ac, char **av)
-{
-	std::string puzzle_file;
-
-	if (ac == 1)
-	{
-		std::cout << "Start N-Puzzle with a random 3*3 Puzzle" << std::endl;
-		return (1);
-	}
-	for (int i = 1; i < ac; i++)
-	{
-		if ((std::string(av[i]) == "-f") || (std::string(av[i]) == "--puzzle_file"))
-		{
-            if (i + 1 < ac && this->check_file(av[i++]))
-                this->puzzle_file = std::string(av[i++]);
-			else
-			{
-                std::cerr << "--puzzle_file option required one file as argument." << std::endl;
-                return (0);
-            }
-			return (1);
-        }
-		else if ((std::string(av[i]) == "-s") || (std::string(av[i]) == "--puzzle_size"))
-		{
-            if (i + 1 < ac && this->_is_number(av[++i]))
-				this->p->size = std::stoi(av[i]);
-			else
-			{
-                std::cerr << "--size option required one postitive int as argument." << std::endl;
-                return (0);
-            }
-        }
-		else if ((std::string(av[i]) == "-g") || (std::string(av[i]) == "--generate_puzzle"))
-			;
-		else
-		{
-			this->print_usage();
-			return (0);
-		}
-	}
-	return (1);
+	delete solution;
 }
 
 /*
 ** Private Methods
 */
 
-bool NPuzzleHandler::_is_number(const std::string &s)
+int	NPuzzleHandler::_parse_file()
 {
-	return !s.empty() && std::all_of(s.begin(), s.end(), ::isdigit);
-}
-
-int	NPuzzleHandler::_parse_file(const std::string &file_name)
-{
-	if (file_name.empty())
-		return (0);
 	std::cout << "Exit Parser - puzzle file open and parsed" << std::endl;
 	return (0);
 }
 
-int NPuzzleHandler::_generate_puzzle(const int size)
+int NPuzzleHandler::_generate_puzzle()
 {
-	int max = size * size;
-	std::vector<int> v(max, 0);
-
 	unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
     std::default_random_engine e(seed);
-	std::generate(v.begin(), v.end(), [n = 0] () mutable { return n++; });
-	std::shuffle(std::begin(v), std::end(v), e);
-	this->p->grid = v;
+	std::generate(this->p->grid.begin(), this->p->grid.end(), [n = 0] () mutable { return n++; });
+	std::shuffle(std::begin(this->p->grid), std::end(this->p->grid), e);
+	this->p->_();
 	std::cout << "Exit Parser - puzzle genrated" << std::endl;
 	return (1);
+}
+
+int div(unsigned int x, unsigned int y)
+{
+	return ((x + y - 1) / y);
+}
+
+void NPuzzleHandler::_generate_solution()
+{
+	int nu = 1;
+	int sr = 0;
+	int sc = 0;
+	int r = this->solution->size - 1;
+	int c = this->solution->size - 1;
+
+    while(sr <= r && sc <= c)
+	{
+        for (int i = sc; i <= c; i++)
+		{
+            this->solution->grid[sr * this->solution->size + i] = nu;
+            nu++;
+        }
+        sr++;
+        for (int i = sr; i <= r; i++)
+		{
+            this->solution->grid[i * this->solution->size + c] = nu;
+            nu++;
+        }
+        c--;
+        if (sr <= r)
+		{
+            for (int i = c; i >= sc; i--)
+			{
+                this->solution->grid[r * this->solution->size + i] = nu;
+                nu++;
+            }
+            r--;
+        }
+        if (sc <= c)
+		{
+            for (int i = r; i >= sr; i--)
+			{
+                this->solution->grid[i * this->solution->size + sc] = nu;
+                nu++;
+            }   
+            sc++;
+        }
+    }
+	this->solution->grid[(int)(this->solution->length / 2)] = 0;
+	this->solution->_();
 }
 
 /*
@@ -120,11 +105,12 @@ int NPuzzleHandler::_generate_puzzle(const int size)
 
 int NPuzzleHandler::parser()
 {
+	this->_generate_solution();
 	std::cout << "Enter Parser" << std::endl;
 	if (!this->puzzle_file.empty())
-		return (this->_parse_file(this->puzzle_file));
+		return (this->_parse_file());
 	else
-		return this->_generate_puzzle(this->p->size);
+		return this->_generate_puzzle();
 }
 
 int	NPuzzleHandler::solve()

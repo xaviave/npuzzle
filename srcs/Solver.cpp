@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/16 10:10:21 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/16 21:59:31 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/03/17 14:14:58 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,11 @@ int Solver::_get_zero_coord(const std::vector<int> g) const
 ** Public Methods
 */
 
+// std::vector<int>::iterator it = std::find(vecOfNums.begin(), vecOfNums.end(), 22);
+// if (it != vecOfNums.end())
+//     std::cout << "Element Found" << std::endl;
+// else
+//     std::cout << "Element Not Found" << std::endl;
 
 int Solver::a_star(Puzzle base)
 {
@@ -56,26 +61,12 @@ int Solver::a_star(Puzzle base)
 	std::vector<Puzzle> closeset;
 	
 	openset.push_back(Puzzle(&base));
-	openset[0]._();
 	static int z = this->_get_zero_coord(base.grid);
-	std::cout << z << std::endl;
 	for (int i = 0; i < 4; i++)
 	{
-		std::cout << i << "00" << std::endl;
-		tmp = base.move(i, z, base);
-		// abort free invalid pointer here
+		std::vector<int> tmp(base.move(i, z));
 		if (!tmp.empty())
 			openset.push_back(Puzzle(base.size, tmp));
 	}
-	base._();
-	for (size_t i = 0; i < openset.size(); i++)
-	{
-		openset[i]._();
-	}
-	return (1);
-}
-
-int Solver::manhattan_distance()
-{
 	return (1);
 }
