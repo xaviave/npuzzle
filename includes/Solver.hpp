@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/16 10:07:19 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/17 14:14:57 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/03/17 16:59:49 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ class Solver : public Heuristic
 
 		// Methods
 		int	a_star(Puzzle base);
+		int	get_number_index(const std::vector<int> g, int nu) const;
+
 	private:
 		int _get_cost();
 		int _get_zero_coord(const std::vector<int> g) const;

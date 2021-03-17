@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/15 12:16:15 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/17 16:45:19 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/03/17 17:23:34 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,11 +49,6 @@ int NPuzzleHandler::_generate_puzzle()
 	return (1);
 }
 
-int div(unsigned int x, unsigned int y)
-{
-	return ((x + y - 1) / y);
-}
-
 void NPuzzleHandler::_generate_solution()
 {
 	int nu = 1;
@@ -65,37 +60,27 @@ void NPuzzleHandler::_generate_solution()
     while(sr <= r && sc <= c)
 	{
         for (int i = sc; i <= c; i++)
-		{
-            this->solution->grid[sr * this->solution->size + i] = nu;
-            nu++;
-        }
+            this->solution->grid[sr * this->solution->size + i] = nu++;
         sr++;
         for (int i = sr; i <= r; i++)
-		{
-            this->solution->grid[i * this->solution->size + c] = nu;
-            nu++;
-        }
+            this->solution->grid[i * this->solution->size + c] = nu++;
         c--;
         if (sr <= r)
 		{
             for (int i = c; i >= sc; i--)
-			{
-                this->solution->grid[r * this->solution->size + i] = nu;
-                nu++;
-            }
+                this->solution->grid[r * this->solution->size + i] = nu++;
             r--;
         }
         if (sc <= c)
 		{
             for (int i = r; i >= sr; i--)
-			{
-                this->solution->grid[i * this->solution->size + sc] = nu;
-                nu++;
-            }   
+                this->solution->grid[i * this->solution->size + sc] = nu++;
             sc++;
         }
     }
-	this->solution->grid[(int)(this->solution->length / 2)] = 0;
+	this->solution->_();
+	this->solution->grid[this->get_number_index(this->p->grid, this->p->length)] = 0;
+	std::cout << "solution" << std::endl;
 	this->solution->_();
 }
 
