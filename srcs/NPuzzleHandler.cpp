@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/15 12:16:15 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/18 09:45:52 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/03/18 10:39:49 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ int NPuzzleHandler::_generate_puzzle()
     std::default_random_engine e(seed);
 	std::generate(this->p->grid.begin(), this->p->grid.end(), [n = 0] () mutable { return n++; });
 	std::shuffle(std::begin(this->p->grid), std::end(this->p->grid), e);
-	this->p->_();
 	std::cout << "Exit Parser - puzzle genrated" << std::endl;
 	return (1);
 }
@@ -97,8 +96,8 @@ int NPuzzleHandler::parser()
 
 int	NPuzzleHandler::solve()
 {
-	std::cout << "Enter Solve" << std::endl;
-	this->a_star(this->p);
+	this->p->_("Enter Solve");
+	this->a_star(this->p, this->s);
 	std::cout << "Exit Solve" << std::endl;
 	return (0);
 }

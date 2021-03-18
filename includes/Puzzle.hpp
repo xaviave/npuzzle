@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/15 12:16:15 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/17 14:25:47 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/03/18 17:04:45 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,19 +32,22 @@ class Puzzle
 		// variables
 		int					size;
 		int					length;
-		std::vector<int>	h_n;
+		int					f;
+		int					cost;
 		std::vector<int>	grid;
-		
+		void				*p_ptr; // parent ptr | 0x0 if normal puzzle
+		// 	Puzzle a = ((Puzzle *)this->p_ptr);
+
 		// constructor - destructor
 		Puzzle(const int s);
 		Puzzle(Puzzle *obj);
-		Puzzle(const int s, const std::vector<int> g);
+		Puzzle(const int s, const int f_, const int c_, const std::vector<int> g, void *p);
 		virtual ~Puzzle(void);
 
 		// Override methods
 
 		// Methods
-		void						_() const;
+		void						_(const std::string &name) const;
 		mptr 						f_move[4] = {&Puzzle::_move_left, &Puzzle::_move_up, &Puzzle::_move_right, &Puzzle::_move_down};
 		std::vector<int>			move(int i, const int z);
 	private:
