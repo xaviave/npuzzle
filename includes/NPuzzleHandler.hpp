@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/15 12:16:15 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/17 16:45:00 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/03/18 09:44:36 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ class NPuzzleHandler : public Solver
 	public:
 		// Variables
 		Puzzle		*p;
-		Puzzle		*solution;
+		Puzzle		*s;
 		std::string	puzzle_file;
 
 		// Constructor - Destructor

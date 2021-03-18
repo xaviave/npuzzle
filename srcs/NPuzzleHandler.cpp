@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/15 12:16:15 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/17 17:23:34 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/03/18 09:45:52 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,16 @@
 ** Constructor - Destructor Methods
 */
 
-NPuzzleHandler::NPuzzleHandler(const int s, const std::string &file_name) : puzzle_file(file_name)
+NPuzzleHandler::NPuzzleHandler(const int s_, const std::string &file_name) : puzzle_file(file_name)
 {
-	p = new Puzzle(s);
-	solution = new Puzzle(s);
+	p = new Puzzle(s_);
+	s = new Puzzle(s_);
 }
 
 NPuzzleHandler::~NPuzzleHandler(void)
 {
 	delete p;
-	delete solution;
+	delete s;
 }
 
 /*
@@ -54,34 +54,31 @@ void NPuzzleHandler::_generate_solution()
 	int nu = 1;
 	int sr = 0;
 	int sc = 0;
-	int r = this->solution->size - 1;
-	int c = this->solution->size - 1;
+	int r = this->s->size - 1;
+	int c = this->s->size - 1;
 
     while(sr <= r && sc <= c)
 	{
         for (int i = sc; i <= c; i++)
-            this->solution->grid[sr * this->solution->size + i] = nu++;
+            this->s->grid[sr * this->s->size + i] = nu++;
         sr++;
         for (int i = sr; i <= r; i++)
-            this->solution->grid[i * this->solution->size + c] = nu++;
+            this->s->grid[i * this->s->size + c] = nu++;
         c--;
         if (sr <= r)
 		{
             for (int i = c; i >= sc; i--)
-                this->solution->grid[r * this->solution->size + i] = nu++;
+                this->s->grid[r * this->s->size + i] = nu++;
             r--;
         }
         if (sc <= c)
 		{
             for (int i = r; i >= sr; i--)
-                this->solution->grid[i * this->solution->size + sc] = nu++;
+                this->s->grid[i * this->s->size + sc] = nu++;
             sc++;
         }
     }
-	this->solution->_();
-	this->solution->grid[this->get_number_index(this->p->grid, this->p->length)] = 0;
-	std::cout << "solution" << std::endl;
-	this->solution->_();
+	this->s->grid[this->get_number_index(this->s->grid, this->s->length)] = 0;
 }
 
 /*
