@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/15 12:16:15 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/18 17:04:32 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/03/19 15:14:00 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,27 +16,27 @@
 ** Constructor - Destructor Methods
 */
 
-Puzzle::Puzzle(const int s) : size(s), length(std::pow(s, 2)), f(INT_MAX), cost(0), p_ptr(0x0)
+Puzzle::Puzzle(const int s) : size(s), length(std::pow(s, 2)), f(INT_MAX - 1), cost(0), p_ptr(0x0)
 {
-	std::cout << "[DEBUG]:Puzzle Constructor | addr: " << this << std::endl;
+	// std::cout << "[DEBUG]:Puzzle Constructor | addr: " << this << std::endl;
 	grid = std::vector<int> (length, 0);
 }
 
 Puzzle::Puzzle(Puzzle *obj) : size(obj->size), length(obj->length), f(obj->f), cost(obj->cost), grid(obj->grid),p_ptr(obj->p_ptr)
 {
-	std::cout << "[DEBUG]:Puzzle Constructor | addr: " << this << std::endl;
+	// std::cout << "[DEBUG]:Puzzle Constructor | addr: " << this << std::endl;
 	return ;
 }
 
 Puzzle::Puzzle(const int s, const int f_, const int c_, const std::vector<int> g, void *p) : size(s), length(std::pow(s, 2)), f(f_), cost(c_), grid(g), p_ptr(p)
 {
-	std::cout << "[DEBUG]:Puzzle Constructor | addr: " << this << std::endl;
+	// std::cout << "[DEBUG]:Puzzle Constructor | addr: " << this << std::endl;
 	return ;
 }
 
 Puzzle::~Puzzle(void)
 {
-	std::cout << "[DEBUG]:Puzzle Destructor | addr: " << this << std::endl;
+	// std::cout << "[DEBUG]:Puzzle Destructor | addr: " << this << std::endl;
 	return ;
 }
 
@@ -52,7 +52,6 @@ std::vector<int>	Puzzle::_move_left(const int z, std::vector<int> grid)
 {
 	if ((z % this->size) == 0)
 		return {};
-	std::cout << "[DEBUG]:move: left" << std::endl;
 	grid[z] = grid[z - 1];
 	grid[z - 1] = 0;
 	return grid;
@@ -62,7 +61,6 @@ std::vector<int>	Puzzle::_move_up(const int z, std::vector<int> grid)
 {
 	if (z < this->size)
 		return {};
-	std::cout << "[DEBUG]:move: up" << std::endl;
 	grid[z] = grid[z - this->size];
 	grid[z - this->size] = 0;
 	return grid;
@@ -72,7 +70,6 @@ std::vector<int>	Puzzle::_move_right(const int z, std::vector<int> grid)
 {
 	if ((z % this->size) == this->size - 1)
 		return {};
-	std::cout << "[DEBUG]:move: right" << std::endl;
 	grid[z] = grid[z + 1];
 	grid[z + 1] = 0;
 	return grid;
@@ -82,7 +79,6 @@ std::vector<int>	Puzzle::_move_down(const int z, std::vector<int> grid)
 {
 	if (z > (this->length - this->size))
 		return {};
-	std::cout << "[DEBUG]:move: down" << std::endl;
 	grid[z] = grid[z + this->size];
 	grid[z + this->size] = 0;
 	return grid;
@@ -94,9 +90,9 @@ std::vector<int>	Puzzle::_move_down(const int z, std::vector<int> grid)
 
 void Puzzle::_ (const std::string &name) const
 {
-	std::cout << "______________________________________" <<std::endl;
-	std::cout << "need print heuristic" << std::endl;
+	std::cout << std::endl << "______________________________________" <<std::endl;
 	std::cout << name << std::endl << "addr: " << this << " | p_ptr: " << this->p_ptr << std::endl;
+	std::cout << "f = " << this->f << " | cost = " << this->cost << std::endl;
 	std::cout << "-------------" <<std::endl;
 	for (int i = 0; i < this->length; i++)
 	{

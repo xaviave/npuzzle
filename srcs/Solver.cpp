@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/16 10:10:21 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/18 17:17:19 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/03/19 16:40:05 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,51 +55,65 @@ int		Solver::_calculate_f(const std::vector<int> p_grid, const Puzzle s) const
 {
 	int	h = 0;
 
-	for (int i = 0; i < s.length; i++)
+	for (int i = 1; i < s.length; i++)
 		h += this->_get_cost(this->get_number_index(p_grid, i), this->get_number_index(s.grid, i), s.size);
 	return (h);
 }
 
-int		Solver::_check_f(std::vector<Puzzle> l, int f)
+int		Solver::_get_min_f_pos(std::vector<Puzzle> l) const
 {
-	if (!l.size())
+	int	f = INT_MAX;
+	int	ret	= 0;
+
+	std::cout << "openset size == " << l.size() << std::endl;
+	if (l.size() == 1)
 		return (0);
 	for (size_t i = 0; i < l.size(); i++)
-		if (f < l[i].f)
-			return (i);
-	return (-1);
+	{
+		if (l[i].f < f)
+		{
+			ret = i;
+			f = l[i].f;
+		}
+	}
+	return (ret);
 }
 
-void	Solver::_exec_moves(std::vector<Puzzle> openset, std::vector<Puzzle> closeset, Puzzle p, Puzzle s)
+int		Solver::_in_list(std::vector<Puzzle> *l, const std::vector<int> *grid) const
 {
-	/*
-	** Execute every possible move (LEFT / UP / RIGHT / DOWN)
-	** If a move is executed, a new puzzle is created with parent ptr saved
-	** and added to a vector (openset)
-	**
-	** Then the cost for every instance is calculated
-	*/
-	int			f;
-	int			pos;
-	static int	z = this->_get_zero_coord(p.grid);
-	
+	for (size_t i = 0; i < (*l).size(); i++)
+		if ((*l)[i].grid == *grid)
+			return (i);
+	return (0);`
+}
+
+void	Solver::_exec_moves(std::vector<Puzzle> *openset, std::vector<Puzzle> *closeset, Puzzle p, Puzzle s)
+{
+	int	e_pos;
+	int	z = this->_get_zero_coord(p.grid);
+
+	p._("================== ENTER MOVES");
 	for (int i = 0; i < 4; i++)
 	{
-		std::cout << "____________________________________________"<< std::endl;
 		std::vector<int> tmp(p.move(i, z));
-		std::cout << !tmp.empty() << std::endl;
 		if (!tmp.empty())
 		{
-			f = this->_calculate_f(tmp, s) + p.cost + 1;
-			// get the pos of puzzle to keep the openset sorted
-			pos = this->_check_f(openset, f);
-			if (pos != -1 && this->_check_f(closeset, f) != -1)
+			e_pos = this->_in_list(openset, &tmp);
+			if (this->_in_list(closeset, &tmp))
+				;
+			else if (!e_pos)
+				openset->push_back(Puzzle(p.size, this->_calculate_f(tmp, s), p.cost + 1, tmp, &p));
+			else if (p.cost + 1 < (*openset)[e_pos].cost)
 			{
-				openset.insert(openset.begin() + pos, Puzzle(p.size, f, p.cost + 1, tmp, &p));
-				openset[pos]._("last openset");
+				{
+					(*openset)[e_pos].cost = p.cost + 1;
+					(*openset)[e_pos].f = this->_calculate_f(tmp, s) + p.cost + 1;
+					(*openset)[e_pos].p_ptr= &p;
+				}
 			}
 		}
 	}
+	std::cout << "================== EXIT MOVES" << std::endl;
 }
 
 /*
@@ -113,25 +127,33 @@ int		Solver::get_number_index(const std::vector<int> g, int nu) const
 
 int		Solver::_generate_path_solution(Puzzle resolve)
 {
+	std::cout << "\n\n\n\n\nSolution founded" << std::endl;
+	std::exit(1);
 	return (resolve.size);
 }
 
 int 	Solver::a_star(Puzzle base, Puzzle s)
 {
+	int	low_f_pos;
 	std::vector<int> tmp;
 	std::vector<Puzzle> openset;
 	std::vector<Puzzle> closeset;
-
+	
+	// s._("solution");
 	openset.push_back(Puzzle(&base));
 	while (openset.size())
 	{
-		Puzzle t_(openset[0]);
-		openset.erase(openset.begin());
+		low_f_pos = this->_get_min_f_pos(openset);
+		std::cout << "if -1 error | low_pos_f value =  " << low_f_pos << std::endl;
+		Puzzle t_(openset[low_f_pos]);
+		openset.erase(openset.begin() + low_f_pos);
+		closeset.push_back(t_);
 		if (t_.grid == s.grid)
 			return (this->_generate_path_solution(t_));
-		this->_exec_moves(openset, closeset, t_, s);
-		closeset.push_back(t_);
+		this->_exec_moves(&openset, &closeset, t_, s);
 	}
-	s._("solution");
+	std::cout << "Not possible to resolve Puzzle" << std::endl;
+	for (size_t x = 0; x < openset.size(); x++)
+		openset[x]._("x");
 	return (1);
 }
