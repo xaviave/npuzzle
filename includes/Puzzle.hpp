@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/15 12:16:15 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/18 17:04:45 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/03/22 13:49:17 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ class Puzzle
 		int					size;
 		int					length;
 		int					f;
-		int					cost;
+		int					g;
 		std::vector<int>	grid;
 		void				*p_ptr; // parent ptr | 0x0 if normal puzzle
 		// 	Puzzle a = ((Puzzle *)this->p_ptr);
@@ -41,7 +41,7 @@ class Puzzle
 		// constructor - destructor
 		Puzzle(const int s);
 		Puzzle(Puzzle *obj);
-		Puzzle(const int s, const int f_, const int c_, const std::vector<int> g, void *p);
+		Puzzle(const int s, const int f_, const int g_, const std::vector<int> grid_, void *p);
 		virtual ~Puzzle(void);
 
 		// Override methods

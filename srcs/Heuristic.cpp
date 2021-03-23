@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/17 13:07:16 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/18 16:34:08 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/03/23 15:40:25 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 ** Constructor - Destructor Methods
 */
 
-Heuristic::Heuristic() : h(0)
+Heuristic::Heuristic() : h(MANH)
 {
 	return ;
 }
@@ -35,17 +35,17 @@ Heuristic::~Heuristic()
 ** Private Methods
 */
 
-float	Heuristic::_manhattan_distance(int a_x, int a_y, int t_x, int t_y) const
+int	Heuristic::_manhattan_distance(int a_x, int a_y, int t_x, int t_y) const
 {
 	return (std::abs((float)(a_x - t_x)) + std::abs((float)(a_y - t_y)));
 }
 
-float	Heuristic::_euclidian_distance(int a_x, int a_y, int t_x, int t_y) const
+int	Heuristic::_diagonal_distance(int a_x, int a_y, int t_x, int t_y) const
 {
 	return (std::max(std::abs((float)(a_x - t_x)), std::abs((float)(a_y - t_y))));
 }
 
-float	Heuristic::_diagonal_distance(int a_x, int a_y, int t_x, int t_y) const
+int	Heuristic::_euclidian_distance(int a_x, int a_y, int t_x, int t_y) const
 {
 	return std::sqrt(std::pow((float)(a_x - t_x), 2) + std::pow((float)(a_y - t_y), 2));
 }
@@ -54,7 +54,7 @@ float	Heuristic::_diagonal_distance(int a_x, int a_y, int t_x, int t_y) const
 ** Public Methods
 */
 
-float	Heuristic::heuristic(int a_x, int a_y, int t_x, int t_y) const
+int	Heuristic::heuristic(int a_x, int a_y, int t_x, int t_y) const
 {
 	return (this->*f_heuristic[this->h])(a_x, a_y, t_x, t_y);
 }
