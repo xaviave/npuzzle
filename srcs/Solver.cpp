@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/16 10:10:21 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/23 16:24:33 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/03/24 09:23:21 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,15 +163,14 @@ void	Solver::_exec_moves(std::vector<Puzzle> *openset, std::vector<Puzzle> *clos
 			c_pos = this->_in_list(closeset, &tmp);
 			o_pos = this->_in_list(openset, &tmp);
 
+			if (c_pos != -1 && p.f >   )
 
-			if (c_pos == -1 && o_pos == -1)
-				openset->push_back(Puzzle(p.size, f_, g_, tmp, &p));
-			else
 			{
 				if ()
 				(*openset)[o_pos].g = g_;
 				(*openset)[o_pos].f = f_;
 				(*openset)[o_pos].p_ptr= &p;
+				openset->push_back(Puzzle(p.size, f_, g_, tmp, &p));
 			}
 		}
 	}
