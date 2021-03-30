@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/17 13:02:28 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/18 11:50:21 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/03/24 09:35:38 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,9 +16,13 @@
 # include <cmath>
 # include <algorithm>
 
+# define MANH 0
+# define EUCL 1
+# define DIAG 2
+
 class Heuristic
 {
-	typedef float	(Heuristic::*hptr)(int a_x, int a_y, int t_x, int t_y) const;
+	typedef int	(Heuristic::*hptr)(int a_x, int a_y, int t_x, int t_y) const;
 	public:
 		short		h;
 
@@ -26,12 +30,12 @@ class Heuristic
 		Heuristic(short h_func);
 		~Heuristic();
 		
-		hptr 		f_heuristic[4] = {&Heuristic::_manhattan_distance, &Heuristic::_euclidian_distance, &Heuristic::_diagonal_distance};
-		float		heuristic(int a_x, int a_y, int t_x, int t_y) const;
+		hptr 	f_heuristic[3] = {&Heuristic::_manhattan_distance, &Heuristic::_euclidian_distance, &Heuristic::_diagonal_distance};
+		int		heuristic(int a_x, int a_y, int t_x, int t_y) const;
 	private:
-		float		_manhattan_distance(int a_x, int a_y, int t_x, int t_y) const;
-		float		_euclidian_distance(int a_x, int a_y, int t_x, int t_y) const;
-		float		_diagonal_distance(int a_x, int a_y, int t_x, int t_y) const;
+		int		_manhattan_distance(int a_x, int a_y, int t_x, int t_y) const;
+		int		_euclidian_distance(int a_x, int a_y, int t_x, int t_y) const;
+		int		_diagonal_distance(int a_x, int a_y, int t_x, int t_y) const;
 
 };
 

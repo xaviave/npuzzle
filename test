@@ -1,0 +1,110 @@
+Start N-Puzzle with a random 3*3 Puzzle
+[DEBUG]:Puzzle Constructor | addr: 0x7f81f2c02b10
+[DEBUG]:Puzzle Constructor | addr: 0x7f81f2c02c10
+Enter Parser
+Exit Parser - Puzzle generated
+
+______________________________________
+soluce
+addr: 0x7f81f2c02c10 | p_ptr: 0x0
+f = 0 | cost = 0
+-------------
+1	2	3	
+8	0	4	
+7	6	5	
+-------------
+______________________________________
+[DEBUG]:Puzzle Destructor | addr: 0x7f81f2c02cc0
+p in closeset | f = 0 | openset size = 0
+
+______________________________________
+_exec_moves enter
+addr: 0x7ffeec62b400 | p_ptr: 0x0
+f = 0 | cost = 0
+-------------
+0	2	3	
+1	4	5	
+8	7	6	
+-------------
+______________________________________
+EMPTY TMP
+[DEBUG]:Puzzle Destructor | addr: 0x7ffeec62b300
+EMPTY TMP
+[DEBUG]:Puzzle Destructor | addr: 0x7ffeec62b300
+EXEC MOVE RIGHT
+p_ created
+founded in closeset
+
+______________________________________
+p___
+addr: 0x7ffeec62b300 | p_ptr: 0x7ffeec62b400
+f = 8 | cost = 1
+-------------
+2	0	3	
+1	4	5	
+8	7	6	
+-------------
+______________________________________
+
+______________________________________
+
+addr: 0x7f81f2c02dc0 | p_ptr: 0x0
+f = 0 | cost = 0
+-------------
+0	2	3	
+1	4	5	
+8	7	6	
+-------------
+______________________________________
+END closeset
+
+
+[DEBUG]:Puzzle Destructor | addr: 0x7ffeec62b300
+EXEC MOVE DOWN
+p_ created
+founded in closeset
+
+______________________________________
+p___
+addr: 0x7ffeec62b300 | p_ptr: 0x7ffeec62b400
+f = 6 | cost = 1
+-------------
+1	2	3	
+0	4	5	
+8	7	6	
+-------------
+______________________________________
+
+______________________________________
+
+addr: 0x7f81f2c02dc0 | p_ptr: 0x0
+f = 0 | cost = 0
+-------------
+0	2	3	
+1	4	5	
+8	7	6	
+-------------
+______________________________________
+END closeset
+
+
+[DEBUG]:Puzzle Destructor | addr: 0x7ffeec62b300
+_exec_moves exit
+[DEBUG]:Puzzle Destructor | addr: 0x7ffeec62b400
+
+
+
+
+
+
+
+
+
+
+
+
+Not possible to resolve Puzzle
+[DEBUG]:Puzzle Destructor | addr: 0x7f81f2c02dc0
+Exit Solve
+[DEBUG]:Puzzle Destructor | addr: 0x7f81f2c02b10
+[DEBUG]:Puzzle Destructor | addr: 0x7f81f2c02c10

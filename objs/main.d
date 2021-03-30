@@ -1,7 +1,8 @@
-objs/main.o: srcs/main.cpp includes/NPuzzleHandler.hpp includes/ArgParser.hpp \
-  includes/Puzzle.hpp includes/Solver.hpp
+objs/main.o: srcs/main.cpp includes/ArgParser.hpp includes/NPuzzleHandler.hpp \
+  includes/Puzzle.hpp includes/Solver.hpp includes/Heuristic.hpp
 srcs/main.cpp:
-includes/NPuzzleHandler.hpp:
 includes/ArgParser.hpp:
+includes/NPuzzleHandler.hpp:
 includes/Puzzle.hpp:
 includes/Solver.hpp:
+includes/Heuristic.hpp:

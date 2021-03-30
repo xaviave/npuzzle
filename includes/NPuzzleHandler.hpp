@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/15 12:16:15 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/18 09:44:36 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/03/29 13:35:07 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,13 +35,13 @@ class NPuzzleHandler : public Solver
 		// Override Methods
 
 		// Methods
-		int		parser();
-		int		solve();
+		void	parser();
+		void	solve();
 	private:
-		int		_random_from_range(int start, int end) const;
-		int		_parse_file();
-		int 	_generate_puzzle();
+		void	_parse_file();
+		void 	_generate_puzzle();
 		void 	_generate_solution();
+		int		_is_solvable() const;
 
 };
 
