@@ -1,0 +1,8 @@
+# This puzzle is unsolvable
+3
+0 2 3 # ue
+8 6 4
+5 1 7
+# hi
+2 3 #f
+12 4 23 43 0
