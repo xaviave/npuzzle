@@ -1,11 +1,12 @@
 import copy
 import logging
+import line_profiler
 
 from Heuristic import Heuristic
 
 
 class Node(Heuristic):
-    parent = None
+    parent = None  # hash value from hash_dict
     h: int = 0
     g: int = 0
     f: int = 0
@@ -15,16 +16,15 @@ class Node(Heuristic):
     moves: list = []
 
     def _rigth(self, z: int):
-        # logging.warning("_rigth")
         if (z % self.size) == self.size - 1:
             return None
+        # optimize deepecopy
         cc = copy.deepcopy(self)
         cc.grid[z] = cc.grid[z + 1]
         cc.grid[z + 1] = 0
         return cc
 
     def _up(self, z: int):
-        # logging.warning("_up")
         if z < self.size:
             return None
         cc = copy.deepcopy(self)
@@ -33,7 +33,6 @@ class Node(Heuristic):
         return cc
 
     def _left(self, z: int):
-        # logging.warning("_left")
         if (z % self.size) == 0:
             return None
         cc = copy.deepcopy(self)
@@ -42,7 +41,6 @@ class Node(Heuristic):
         return cc
 
     def _down(self, z: int):
-        # logging.warning("_down")
         if z >= (self.length - self.size):
             return None
         cc = copy.deepcopy(self)
@@ -61,9 +59,9 @@ class Node(Heuristic):
         x_s for element neigbour solution coord
         """
         lc: int = 0
-
-        for r in range(size):
-            for c in range(size):
+        r_size = range(size)
+        for r in r_size:
+            for c in r_size:
                 # line
                 if c + 1 < size:
                     x_g: int = r * size + c
@@ -101,19 +99,19 @@ class Node(Heuristic):
                         lc += 1
         return lc * 2
 
-    def _get_heuristic(self, goal: list) -> int:
+    def _get_heuristic(self, grid: list, goal: list) -> int:
+        # local var
         h: int = 0
         lc: int = 0
-        for i in self.grid:
+        size: int = self.size  # optim
+        for i in grid:
             if i == 0:
                 continue
             t_p: int = goal.index(i)
-            g_p: int = self.grid.index(i)
-            h += self.f_heuristic(
-                g_p // self.size, g_p % self.size, t_p // self.size, t_p % self.size
-            )
+            g_p: int = grid.index(i)
+            h += self.f_heuristic(g_p // size, g_p % size, t_p // size, t_p % size)
         if self.f_linear_conflict:
-            lc += self._linear_conflict(self.size, goal, self.grid)
+            lc += self._linear_conflict(size, goal, grid)
         return h + lc
 
     def _init_kwargs(self, kwargs):
@@ -132,6 +130,7 @@ class Node(Heuristic):
         self.moves = [self._rigth, self._up, self._down, self._left]
         if kwargs is not None:
             self._init_kwargs(kwargs)
+            print(self)
 
     def __str__(self):
         s = f"\n________________________\nh = {self.h} | g = {self.g} | f = {self.f}\n"
@@ -146,9 +145,9 @@ class Node(Heuristic):
 
     def update(self, cost: int, goal: list, parent):
         self.parent = parent
-        self.h = self._get_heuristic(goal)
+        self.h = self._get_heuristic(self.grid, goal)
         self.g = cost
         self.f = self.h + self.g
 
     def get_successor(self, z: int) -> list:
-        return [move(z) for move in self.moves]
+        return [self.moves[0](z), self.moves[1](z), self.moves[2](z), self.moves[3](z)]

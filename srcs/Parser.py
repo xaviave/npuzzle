@@ -11,7 +11,6 @@ from args.FileCheckerAction import FileCheckerAction
 
 class Parser(ArgParser):
     kwargs: dict = {}
-    default_file: str = os.path.join("maps", "easy.txt")
 
     def _add_exclusive_args(self, parser):
         super()._add_exclusive_args(parser)
@@ -42,8 +41,8 @@ class Parser(ArgParser):
             "--file",
             type=str,
             action=FileCheckerAction,
-            default=self.default_file,
-            help=f"Provide map TXT file - Using '{self.default_file}' as default file",
+            default=os.path.join("maps", "easy.txt"),
+            help=f"Provide map TXT file - Using '{os.path.join('maps', 'easy.txt')}' as default file",
             dest="puzzle_file",
         )
         parser.add_argument(

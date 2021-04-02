@@ -11,6 +11,7 @@ class Solver(Parser):
     COST: int = 1
     goal: list = []
     moves: list = []
+    hash_dict: dict = {}
 
     def _add_parser_args(self, parser):
         super()._add_parser_args(parser)
@@ -20,6 +21,14 @@ class Solver(Parser):
             action="store_true",
             help=f"Active linear conflict with heuristic (only with manhanttan distance)",
             dest="linear_conflict",
+        )
+        parser.add_argument(
+            "-sf",
+            "--solution_file",
+            type=str,
+            help=f"File where Solution is save",
+            default="solution_file.txt",
+            dest="solution_file",
         )
 
     def _add_exclusive_args(self, parser):
@@ -53,28 +62,29 @@ class Solver(Parser):
             default=Heuristic.manhattan_distance,
         )
 
-    @staticmethod
-    def _get_path(end: Node):
+    def _save_in_file(self, path: list):
+        with open(self.args.solution_file, "w") as fd:
+            fd.write("\n".join([x.__str__() for x in path]))
+
+    def _get_path(self, end: Node):
         logging.info("Solution founded")
         n: Node = end
         path: list = [end]
         while n.parent is not None:
-            path.append(n.parent)
+            path.append(self.hash_dict[n.parent])
             n = path[-1]
         return path[::-1]
 
     def __init__(self):
         super().__init__()
-        print(self.args, "\n", self.kwargs)
         self.goal = self._generate_solution(self.kwargs["size"])
-        # self.kwargs["grid"] = [0, 8, 4, 5, 2, 3, 6, 7, 1]
-        self.kwargs["goal"] = self.goal
-        self.kwargs["parent"] = None
         self.kwargs["cost"] = 0
-        self.kwargs["heuristic_function"] = self.args.heuristic_function
+        self.kwargs["parent"] = None
+        self.kwargs["goal"] = self.goal
         self.kwargs["linear_conflict"] = self.args.linear_conflict
+        self.kwargs["heuristic_function"] = self.args.heuristic_function
         self.base = Node(self.kwargs)
-        print(self.base)
+        self.hash_dict: dict = {hash(self.base): self.base}
 
     def __call__(self):
         """
@@ -85,28 +95,33 @@ class Solver(Parser):
         - CLOSESET data structure
             A container that easily allows to check whether a node currently is in the set or not
         """
-
         start = datetime.datetime.now()
         closeset: list = []
         openset: list = [self.base]
         heapq.heapify(openset)
-        i: int = 0
+
+        # opti func
+        c_append = closeset.append
         while len(openset):
             p = heapq.heappop(openset)
-            closeset.append(p.grid)
             if p.grid == self.goal:
                 pp = self._get_path(p)
-                print(
-                    f"{i} iterations | {len(pp)} movements | resolution time: {datetime.datetime.now() - start}"
+                print(f"""
+number of node explored: {len(self.hash_dict)}
+{len(pp)} movements done to find the solution
+resolution time: {datetime.datetime.now() - start}
+"""
                 )
+                self._save_in_file(pp)
                 return pp
-            i += 1
+            self.hash_dict[hash(p)] = p
+            c_append(p.grid)
             z = p.grid.index(0)
             states: list = p.get_successor(z)
             for s in states:
                 if s is None or s.grid in closeset:
                     continue
-                s.update(self.COST + p.g, self.goal, p)
+                s.update(self.COST + p.g, self.goal, hash(p))
                 if s not in openset:
                     heapq.heappush(openset, s)
                 else:
