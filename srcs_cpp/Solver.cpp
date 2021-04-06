@@ -6,11 +6,11 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/16 10:10:21 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/30 12:18:36 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/04/06 10:30:57 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Puzzle.hpp"
+#include "Node.hpp"
 #include "Solver.hpp"
 
 /*
@@ -31,14 +31,14 @@ Solver::~Solver()
 ** Private Methods
 */
 
-int		Solver::_generate_path_solution(Puzzle *resolve)
+int		Solver::_generate_path_solution(Node *resolve)
 {
 	std::cout << "\n\n\n\n\nSolution founded" << std::endl;
 	std::exit(1);
 	return (resolve->size);
 }
 
-int		Solver::_linear_conflict(const Puzzle& s, const std::vector<int>& grid) const
+int		Solver::_linear_conflict(const Node& s, const std::vector<int>& grid) const
 {
 	/*
 		linear conflit - if 2 elements are not in the good order on the same line,
@@ -54,37 +54,43 @@ int		Solver::_linear_conflict(const Puzzle& s, const std::vector<int>& grid) con
 	int	y_s;
 	int	lc = 0;
 
-	for (int r = 0; r < s.size - 1; r++)
+	for (int r = 0; r < s.size; r++)
 	{
-		for (int c = 0; c < s.size - 1; c++)
+		for (int c = 0; c < s.size; c++)
 		{
 			// line
-			x_g = r * s.size + c;
-			y_g = r * s.size + c + 1;
-			x_s = this->get_number_index(s.length, s.grid, grid[x_g]);
-			y_s = this->get_number_index(s.length, s.grid, grid[y_g]);
-			if (grid[x_g] && grid[y_g] &&
-				(int)(x_g % s.size) < (int)(y_g % s.size) &&
-				(int)(x_s % s.size) > (int)(y_s % s.size) &&
-				(x_g / s.size) == (y_g / s.size) &&
-				(x_s / s.size) == (y_s / s.size))
-				lc++;
+			if (c + 1 < s.size)
+			{
+				x_g = r * s.size + c;
+				y_g = r * s.size + c + 1;
+				x_s = this->get_number_index(s.length, s.grid, grid[x_g]);
+				y_s = this->get_number_index(s.length, s.grid, grid[y_g]);
+				if (grid[x_g] && grid[y_g] &&
+					(int)(x_g % s.size) < (int)(y_g % s.size) &&
+					(int)(x_s % s.size) > (int)(y_s % s.size) &&
+					(x_g / s.size) == (y_g / s.size) &&
+					(x_s / s.size) == (y_s / s.size))
+					lc++;
+			}
 
 			// column
-			x_g = r * s.size + c;
-			y_g = (r + 1) * s.size + c;
-			x_s = this->get_number_index(s.length, s.grid, grid[x_g]);
-			y_s = this->get_number_index(s.length, s.grid, grid[y_g]);
-			// std::cout << "x_g | " << (x_g / s.size) << " - " << (x_g % s.size) << std::endl;
-			// std::cout << "y_g | " << (y_g / s.size) << " - " << (y_g % s.size) << std::endl;
-			// std::cout << "x_s | " << (x_s / s.size) << " - " << (x_s % s.size) << std::endl;
-			// std::cout << "y_s | " << (y_s / s.size) << " - " << (y_s % s.size) << std::endl;
-			if (grid[x_g] && grid[y_g] &&
-				(int)(x_g / s.size) < (int)(y_g / s.size) &&
-				(int)(x_s / s.size) > (int)(y_s / s.size) &&
-				(x_g % s.size) == (y_g % s.size) &&
-				(x_s % s.size) == (y_s % s.size))
-				lc++;
+			if (r + 1 < s.size)
+			{
+				x_g = r * s.size + c;
+				y_g = (r + 1) * s.size + c;
+				x_s = this->get_number_index(s.length, s.grid, grid[x_g]);
+				y_s = this->get_number_index(s.length, s.grid, grid[y_g]);
+				// std::cout << "x_g | " << (x_g / s.size) << " - " << (x_g % s.size) << std::endl;
+				// std::cout << "y_g | " << (y_g / s.size) << " - " << (y_g % s.size) << std::endl;
+				// std::cout << "x_s | " << (x_s / s.size) << " - " << (x_s % s.size) << std::endl;
+				// std::cout << "y_s | " << (y_s / s.size) << " - " << (y_s % s.size) << std::endl;
+				if (grid[x_g] && grid[y_g] &&
+					(int)(x_g / s.size) < (int)(y_g / s.size) &&
+					(int)(x_s / s.size) > (int)(y_s / s.size) &&
+					(x_g % s.size) == (y_g % s.size) &&
+					(x_s % s.size) == (y_s % s.size))
+					lc++;
+			}
 		}
 	}
 	return (lc * 2);
@@ -102,7 +108,7 @@ int 	Solver::_get_heuristic(const int a_pos, const int t_pos, const int size) co
 	return (this->heuristic((int)(a_pos / size), a_pos % size, (int)(t_pos / size), t_pos % size));
 }
 
-int		Solver::_calculate_f(const Puzzle& s, const std::vector<int>& p_grid) const
+int		Solver::_calculate_f(const Node& s, const std::vector<int>& p_grid) const
 {
 	int	h = 0;
 
@@ -112,18 +118,15 @@ int		Solver::_calculate_f(const Puzzle& s, const std::vector<int>& p_grid) const
 			this->get_number_index(s.length, s.grid, i),
 			s.size);
 	if (this->h == 5)
-	{
-		// std::cout << "linear conflitct " << this->_linear_conflict(p_grid, s) << std::endl;
 		h += this->_linear_conflict(s, p_grid);
-	}
 	return (h);
 }
 
 void	Solver::_exec_moves(
-	std::priority_queue<Puzzle, std::vector<Puzzle>,LowestF>& openset,
-	std::map<Puzzle, int>& closeset,
-	Puzzle& p,
-	Puzzle& s
+	std::priority_queue<Node, std::vector<Node>,LowestF>& openset,
+	std::unordered_set<std::vector<int> >& closeset,
+	Node& p,
+	Node& s
 )
 {
 	int	z = this->get_number_index(p.length, p.grid, 0);
@@ -131,33 +134,19 @@ void	Solver::_exec_moves(
 	p._("_exec_moves enter");
 	for (int i = 0; i < 4; i++)
 	{
-		Puzzle p_ = p;
-		// p_ have always the same addr / same in the queue?
-		// std::cout << &p_ << " | " << &p << std::endl;
+		Node p_ = p;
 		p_.move(i, z);
-		if (!p_.grid.empty())
+		if (!p_.grid.empty() && closeset.find(p_.grid) == closeset.end())
 		{
 			p_.g = p.g + 1; // g(p) + cost(p->node)
 			p_.f = this->_calculate_f(s, p_.grid) + p_.g;
 			p_.p_ptr = &p;
 			std::cout << "p_ created" << std::endl;
-			
-			if (closeset.find(p_) != closeset.end())
-			{
-				std::cout << "founded in closeset" << std::endl;
-				p_._("p___");
-				for (auto& x: closeset)
-					x.first._("");
-				std::cout << "END closeset\n\n" << std::endl;
-			}
-			
-			if (closeset.find(p_) == closeset.end())
-			{
-				std::cout << "added in openset due to closeset foundinf" << std::endl;
+			if (not in openset)
 				openset.push(p_);
-			}
-			else if (p.f >  p_.f)
+			else
 			{
+				openset.pop(p_);
 				openset.push(p_);
 				std::cout << "added in openset" << std::endl;
 			}
@@ -180,23 +169,24 @@ int		Solver::get_number_index(const int length, const std::vector<int>& g, const
 	return length;
 }
 
-int 	Solver::a_star(Puzzle& base, Puzzle& s)
+int 	Solver::a_star(Node& base, Node& s)
 {
-	std::priority_queue<Puzzle, std::vector<Puzzle>, LowestF> openset; // priority queue
-	std::map<Puzzle, int> closeset; // hash table
+	std::priority_queue<Node, std::vector<Node>, LowestF> openset; // priority queue
+	std::unordered_set<std::vector<int> > closeset; // hash table
 	
+
 	openset.push(base);
 	while (openset.size())
 	{
-		Puzzle p(openset.top());
+		Node p =openset.top();
 		openset.pop();
 		if (p.grid == s.grid)
 			return (this->_generate_path_solution(&p));
-		closeset[p] = p.g;
+		closeset.insert(p.grid);
 		std::cout << "p in closeset | f = " << p.f << " | openset size = " << openset.size() << std::endl;
 		this->_exec_moves(openset, closeset, p, s);
 	}
-	std::cout << "\n\n\n\n\n\n\n\n\n\n\n\nNot possible to resolve Puzzle" << std::endl;
+	std::cout << "\n\n\n\n\n\n\n\n\n\n\n\nNot possible to resolve Node" << std::endl;
 	// for (size_t x = 0; x < openset.size(); x++)
 	// 	openset[x]._("x");
 	return (1);

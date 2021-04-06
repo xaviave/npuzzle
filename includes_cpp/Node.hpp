@@ -1,21 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   Puzzle.hpp                                         :+:      :+:    :+:   */
+/*   Node.hpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/15 12:16:15 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/29 14:23:59 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/04/06 10:21:52 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PUZZLE_HPP
-# define PUZZLE_HPP
+#ifndef NODE_HPP
+# define NODE_HPP
 
 # include <chrono>
 # include <random>
 # include <vector>
+# include <unordered_set>
 # include <algorithm>
 
 # include "ArgParser.hpp"
@@ -25,10 +26,10 @@
 #define RIGHT 2
 #define DOWN 3
 
-class Puzzle
+class Node
 {
 	public:
-		typedef void (Puzzle::*mptr)(const int z);
+		typedef void (Node::*mptr)(const int z);
 	
 		// variables
 		int		size;
@@ -36,21 +37,21 @@ class Puzzle
 		int		f;
 		int		g;
 		std::vector<int> grid;
-		void	*p_ptr; // parent ptr | 0x0 if normal puzzle
-		// 	Puzzle a = ((Puzzle *)this->p_ptr);
+		void	*p_ptr; // parent ptr | 0x0 if normal Node
+		// 	Node a = ((Node *)this->p_ptr);
 
 		// constructors - destructor
-		Puzzle(const int s);
-		Puzzle(Puzzle *obj);
-		Puzzle(const int s, const int f_, const int g_, std::vector<int> grid_, void *p);
-		virtual ~Puzzle(void);
+		Node(const int s);
+		Node(Node *obj);
+		Node(const int s, const int f_, const int g_, std::vector<int> grid_, void *p);
+		virtual ~Node(void);
 
 		// operators
-		bool operator()(const Puzzle& p) const;
+		bool operator()(const Node& p) const;
 
 		// Methods
 		void	_(const std::string &name) const;
-		mptr 	f_move[4] = {&Puzzle::_move_left, &Puzzle::_move_up, &Puzzle::_move_right, &Puzzle::_move_down};
+		mptr 	f_move[4] = {&Node::_move_left, &Node::_move_up, &Node::_move_right, &Node::_move_down};
 		void	move(int i, const int z);
 
 	private:

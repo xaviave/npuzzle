@@ -6,7 +6,7 @@
 #    By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/15 12:49:31 by xamartin          #+#    #+#              #
-#    Updated: 2021/03/16 19:17:18 by xamartin         ###   ########lyon.fr    #
+#    Updated: 2021/04/06 09:28:58 by xamartin         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,10 +17,10 @@
 TARGET      := npuzzle
 
 #The Directories, Source, Includes, Objects, Binary and Resources
-SRCDIR      := srcs
-INCDIR      := includes
-BUILDDIR    := objs
-TARGETDIR   := bin
+SRCDIR      := srcs_cpp
+INCDIR      := includes_cpp
+BUILDDIR    := objs_cpp
+TARGETDIR   := bin_cpp
 SRCEXT      := cpp
 DEPEXT      := d
 OBJEXT      := o

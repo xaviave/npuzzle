@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/15 12:16:15 by xamartin          #+#    #+#             */
-/*   Updated: 2021/03/29 14:43:11 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/04/06 09:51:04 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,12 +51,12 @@ int		NPuzzleHandler::_is_solvable() const
 
 	for (int i = 0; i < this->p->length; i++)
 	{
-		for (int _ = i + 1; (this->p->grid[i] && _ < this->p->length); _++)
-			if (this->p->grid[_] && this->p->grid[_] < this->p->grid[i])
+		for (int j = i + 1; j < this->p->length; j++)
+			if (this->p->grid[j] && this->p->grid[j] < this->p->grid[i])
 				ni++;
 	}
 	
-	if (((this->p->size % 2) && !(ni % 2)) ||
+	if (((this->p->size % 2) && (ni % 2)) ||
 		(!(this->p->size % 2) &&
 		((!(nt % 2) && (ni % 2)) ||
 		((nt % 2)  && !(ni % 2)))))
@@ -138,30 +138,6 @@ void	NPuzzleHandler::parser()
 
 void	NPuzzleHandler::solve()
 {
-	/*
-	// unsolvable
-	this->p->size = 4;
-	this->p->length = 16;
-	this->p->grid = {3, 9, 1, 15, 14, 11, 4, 6, 13, 0, 10, 12, 2, 7, 8, 5};
-	// solvable
-	this->p->grid = {1, 8, 2, 0, 4, 3, 7, 6, 5};
-	this->p->grid = {4, 1, 3, 0, 8, 6, 7, 2, 5};
-	this->p->grid = {4, 1, 3, 7, 5, 8, 2, 0, 6};
-	this->p->size = 4;
-	this->p->length = 16;
-	this->p->grid = {6, 13, 7, 10, 8, 9, 11, 0, 15, 2, 12, 5, 14 ,3, 1, 4};
-	this->p->grid = {13, 2, 10, 3, 1, 12, 8, 4, 5, 0, 9, 6, 15, 14, 11, 7};
-	
-	// hard 4x4
-	this->p->size = 4;
-	this->p->length = 16;
-	this->p->grid = {8,  7,  1, 11, 4, 13,  3,  2, 5, 12,  9, 14, 6, 10,  0, 15};
-	
-	// linear conflict
-	this->p->grid = {6, 3, 1, 4, 8, 0, 2, 5, 7};
-	this->p->grid = {6, 3, 1, 2, 8, 0, 4, 5, 7};
-	*/
-
 	std::vector<int> t_ = {0, 2, 3, 1, 4, 5, 8, 7, 6};
 	this->p->grid = t_;
 	
