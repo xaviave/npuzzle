@@ -30,8 +30,7 @@ class CWrapper:
 
     def __init__(self, lib_name: str = lib_name):
         # load the library
-        if not os.path.exists(lib_name):
-            self._compile_lib()
+        self._compile_lib()
         self.lib: ctypes.CDLL = ctypes.cdll.LoadLibrary(lib_name)
 
     def launch_solver(self, size: int, c_puzzle: list, c_solution: list):
