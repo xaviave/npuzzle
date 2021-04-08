@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/16 10:10:21 by xamartin          #+#    #+#             */
-/*   Updated: 2021/04/08 16:41:13 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/04/08 16:53:36 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,6 +179,5 @@ int 	Solver::a_star(Node& base, Node& s)
 			}
 		}
 	}
-	std::cout << "\n\n\n\n\n\n\n\n\n\n\n\nNot possible to resolve Node" << std::endl;
 	return (1);
 }
