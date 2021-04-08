@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/16 10:10:21 by xamartin          #+#    #+#             */
-/*   Updated: 2021/04/06 10:30:57 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/04/08 16:41:13 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,12 @@ Solver::~Solver()
 ** Private Methods
 */
 
-int		Solver::_generate_path_solution(Node *resolve)
+int		Solver::_generate_path_solution(std::shared_ptr<Node> resolve, std::map<size_t, std::shared_ptr<Node> > hash_dict)
 {
 	std::cout << "\n\n\n\n\nSolution founded" << std::endl;
+	resolve->_("rg");
 	std::exit(1);
-	return (resolve->size);
+	return (resolve->size + hash_dict.size());
 }
 
 int		Solver::_linear_conflict(const Node& s, const std::vector<int>& grid) const
@@ -122,41 +123,6 @@ int		Solver::_calculate_f(const Node& s, const std::vector<int>& p_grid) const
 	return (h);
 }
 
-void	Solver::_exec_moves(
-	std::priority_queue<Node, std::vector<Node>,LowestF>& openset,
-	std::unordered_set<std::vector<int> >& closeset,
-	Node& p,
-	Node& s
-)
-{
-	int	z = this->get_number_index(p.length, p.grid, 0);
-
-	p._("_exec_moves enter");
-	for (int i = 0; i < 4; i++)
-	{
-		Node p_ = p;
-		p_.move(i, z);
-		if (!p_.grid.empty() && closeset.find(p_.grid) == closeset.end())
-		{
-			p_.g = p.g + 1; // g(p) + cost(p->node)
-			p_.f = this->_calculate_f(s, p_.grid) + p_.g;
-			p_.p_ptr = &p;
-			std::cout << "p_ created" << std::endl;
-			if (not in openset)
-				openset.push(p_);
-			else
-			{
-				openset.pop(p_);
-				openset.push(p_);
-				std::cout << "added in openset" << std::endl;
-			}
-		}
-		else
-			std::cout << "EMPTY TMP" << std::endl;
-	}
-	std::cout << "_exec_moves exit" << std::endl;
-}
-
 /*
 ** Public Methods
 */
@@ -171,23 +137,48 @@ int		Solver::get_number_index(const int length, const std::vector<int>& g, const
 
 int 	Solver::a_star(Node& base, Node& s)
 {
-	std::priority_queue<Node, std::vector<Node>, LowestF> openset; // priority queue
-	std::unordered_set<std::vector<int> > closeset; // hash table
+	std::hash<std::shared_ptr<Node> > node_hash;
+	std::shared_ptr<Node> b = std::make_shared<Node>(base);
+	std::map<size_t, std::shared_ptr<Node> > hash_dict; // save all nodes
+	std::unordered_set<std::vector<int>, VectorHasher > closeset; // hash table of grid
+	std::priority_queue< std::shared_ptr<Node>, std::vector<std::shared_ptr<Node> >, LowestF> openset; // priority queue
 	
-
-	openset.push(base);
+	openset.push(b);
+	hash_dict[node_hash(b)] = b;
 	while (openset.size())
 	{
-		Node p =openset.top();
+		std::shared_ptr<Node> p = openset.top();
 		openset.pop();
-		if (p.grid == s.grid)
-			return (this->_generate_path_solution(&p));
-		closeset.insert(p.grid);
-		std::cout << "p in closeset | f = " << p.f << " | openset size = " << openset.size() << std::endl;
-		this->_exec_moves(openset, closeset, p, s);
+		if (p->grid == s.grid)
+			return (this->_generate_path_solution(p, hash_dict));
+		if (closeset.find(p->grid) == closeset.end())
+			closeset.insert(p->grid);
+		hash_dict[node_hash(p)] = p;
+		int	z = this->get_number_index(p->length, p->grid, 0);
+		for (int i = 0; i < 4; i++)
+		{
+			std::shared_ptr<Node> p_ = std::make_shared<Node>(Node(p));
+			p_->move(i, z);
+			if (!p_->grid.empty() && closeset.find(p_->grid) == closeset.end())
+			{
+				p_->g = p->g + 1;
+				p_->f = this->_calculate_f(s, p_->grid) + p_->g;
+				p_->p_ptr = p;
+				if (!hash_dict.count(node_hash(p_)))
+					openset.push(p_);
+				else
+				{
+					std::shared_ptr<Node> cpy = hash_dict[node_hash(p_)];
+					if (p->g < cpy->g)
+					{
+						cpy->g = p->g;
+						cpy->f = p->f;
+						cpy->p_ptr = p->p_ptr;
+					}
+				}
+			}
+		}
 	}
 	std::cout << "\n\n\n\n\n\n\n\n\n\n\n\nNot possible to resolve Node" << std::endl;
-	// for (size_t x = 0; x < openset.size(); x++)
-	// 	openset[x]._("x");
 	return (1);
 }

@@ -4,6 +4,7 @@ import datetime
 
 from Node import Node
 from Parser import Parser
+from CWrapper import CWrapper
 from Heuristic import Heuristic
 
 
@@ -21,6 +22,15 @@ class Solver(Parser):
             action="store_true",
             help=f"Active linear conflict with heuristic (only with manhanttan distance)",
             dest="linear_conflict",
+        )
+        parser.add_argument(
+            "-cpp",
+            "--cpp_code",
+            action="store_const",
+            const=self._cpp_solver,
+            help="Launch cpp code_solver, for high speed",
+            default=self._solver,
+            dest="solver_func",
         )
         parser.add_argument(
             "-sf",
@@ -66,27 +76,25 @@ class Solver(Parser):
         with open(self.args.solution_file, "w") as fd:
             fd.write("\n".join([x.__str__() for x in path]))
 
-    def _get_path(self, end: Node):
+    def _get_path(self, start: datetime.datetime, end: Node):
         logging.info("Solution founded")
         n: Node = end
         path: list = [end]
         while n.parent is not None:
             path.append(self.hash_dict[n.parent])
             n = path[-1]
-        return path[::-1]
+        path = path[::-1]
+        print(
+            f"""
+number of node explored: {len(self.hash_dict)}
+{len(path)} movements done to find the solution
+resolution time: {datetime.datetime.now() - start}
+"""
+        )
+        self._save_in_file(path)
+        return path
 
-    def __init__(self):
-        super().__init__()
-        self.goal = self._generate_solution(self.kwargs["size"])
-        self.kwargs["cost"] = 0
-        self.kwargs["parent"] = None
-        self.kwargs["goal"] = self.goal
-        self.kwargs["linear_conflict"] = self.args.linear_conflict
-        self.kwargs["heuristic_function"] = self.args.heuristic_function
-        self.base = Node(self.kwargs)
-        self.hash_dict: dict = {hash(self.base): self.base}
-
-    def __call__(self):
+    def _solver(self):
         """
         - OPENSET data structure
             A priority queue (high-priority elements first, here "high-priority" means "low-cost")
@@ -100,20 +108,11 @@ class Solver(Parser):
         openset: list = [self.base]
         heapq.heapify(openset)
 
-        # opti func
         c_append = closeset.append
         while len(openset):
             p = heapq.heappop(openset)
             if p.grid == self.goal:
-                pp = self._get_path(p)
-                print(f"""
-number of node explored: {len(self.hash_dict)}
-{len(pp)} movements done to find the solution
-resolution time: {datetime.datetime.now() - start}
-"""
-                )
-                self._save_in_file(pp)
-                return pp
+                return self._get_path(start, p)
             self.hash_dict[hash(p)] = p
             c_append(p.grid)
             z = p.grid.index(0)
@@ -130,4 +129,22 @@ resolution time: {datetime.datetime.now() - start}
                         openset[n].g = s.g
                         openset[n].f = s.f
                         openset[n].parent = s.parent
-        print(f"Not possible to reach goal")
+
+    def _cpp_solver(self):
+        logging.warning("Launching C++ module")
+        cw = CWrapper()
+        cw.launch_solver(self.base.size, self.base.grid, self.goal)
+
+    def __init__(self):
+        super().__init__()
+        self.goal = self._generate_solution(self.kwargs["size"])
+        self.kwargs["cost"] = 0
+        self.kwargs["parent"] = None
+        self.kwargs["goal"] = self.goal
+        self.kwargs["linear_conflict"] = self.args.linear_conflict
+        self.kwargs["heuristic_function"] = self.args.heuristic_function
+        self.base = Node(self.kwargs)
+        self.hash_dict: dict = {hash(self.base): self.base}
+
+    def __call__(self):
+        self.args.solver_func()

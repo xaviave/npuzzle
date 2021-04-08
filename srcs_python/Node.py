@@ -6,19 +6,19 @@ from Heuristic import Heuristic
 
 
 class Node(Heuristic):
-    parent = None  # hash value from hash_dict
     h: int = 0
     g: int = 0
     f: int = 0
     size: int
     length: int
+    # Parent is a hash value of Node object (used in hash dict)
+    parent: int = None
     grid: list = []
     moves: list = []
 
     def _rigth(self, z: int):
         if (z % self.size) == self.size - 1:
             return None
-        # optimize deepecopy
         cc = copy.deepcopy(self)
         cc.grid[z] = cc.grid[z + 1]
         cc.grid[z + 1] = 0
@@ -100,10 +100,10 @@ class Node(Heuristic):
         return lc * 2
 
     def _get_heuristic(self, grid: list, goal: list) -> int:
-        # local var
         h: int = 0
         lc: int = 0
-        size: int = self.size  # optim
+        size: int = self.size
+
         for i in grid:
             if i == 0:
                 continue
@@ -143,11 +143,11 @@ class Node(Heuristic):
     def __lt__(self, other):
         return self.f < other.f
 
-    def update(self, cost: int, goal: list, parent):
-        self.parent = parent
+    def update(self, cost: int, goal: list, parent: int):
         self.h = self._get_heuristic(self.grid, goal)
         self.g = cost
         self.f = self.h + self.g
+        self.parent = parent
 
     def get_successor(self, z: int) -> list:
         return [self.moves[0](z), self.moves[1](z), self.moves[2](z), self.moves[3](z)]

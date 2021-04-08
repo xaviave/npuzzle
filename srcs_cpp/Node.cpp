@@ -21,15 +21,26 @@ Node::Node(const int s_) : size(s_), length(std::pow(s_, 2)), f(0), g(0), grid(s
 	std::cout << "[DEBUG]:Node Constructor | addr: " << this << std::endl;
 }
 
-Node::Node(Node *obj) : size(obj->size), length(obj->length), f(obj->f), g(obj->g), p_ptr(obj->p_ptr)
+Node::Node(const int s_, int * grid_) : size(s_), length(std::pow(s_, 2)), f(0), g(0), grid(std::vector<int> (length, 0)), p_ptr(0x0)
 {
-	std::copy(grid.begin(), grid.begin() + length, obj->grid.begin());
+	for (int i = 0; i < length; i++)
+		grid[i] = grid_[i];
 	std::cout << "[DEBUG]:Node Constructor | addr: " << this << std::endl;
 }
 
-Node::Node(const int s_, const int f_, const int g_, std::vector<int> grid_, void *p) : size(s_), length(std::pow(s_, 2)), f(f_), g(g_), p_ptr(p)
+Node::Node(const int s_, std::vector<int> grid_) : size(s_), length(std::pow(s_, 2)), f(0), g(0), grid(grid_), p_ptr(0x0)
 {
-	std::copy(grid.begin(), grid.begin() + length, grid_.begin());
+	std::cout << "[DEBUG]:Node Constructor | addr: " << this << std::endl;
+}
+
+Node::Node(std::shared_ptr<Node> obj) : size(obj->size), length(obj->length), f(obj->f), g(obj->g), grid(obj->grid), p_ptr(obj->p_ptr)
+{
+	std::cout << "[DEBUG]:Node Constructor | addr: " << this << std::endl;
+}
+
+Node::Node(const int s_, const int f_, const int g_, std::vector<int> grid_, std::shared_ptr<Node> p) : size(s_), length(std::pow(s_, 2)), f(f_), g(g_), p_ptr(p)
+{
+	grid = grid_;
 	std::cout << "[DEBUG]:Node Constructor | addr: " << this << std::endl;
 }
 

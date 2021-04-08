@@ -6,30 +6,33 @@
 #    By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/03/15 12:49:31 by xamartin          #+#    #+#              #
-#    Updated: 2021/04/06 09:28:58 by xamartin         ###   ########lyon.fr    #
+#    Updated: 2021/04/08 15:51:07 by xamartin         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
 
 #Compiler and Linker
-# CXX          := g++
+# CXX       := g++
 
 #The Target Binary Program
 TARGET      := npuzzle
+SO_TARGET	:= lib_npuzzle.so
 
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR      := srcs_cpp
 INCDIR      := includes_cpp
 BUILDDIR    := objs_cpp
 TARGETDIR   := bin_cpp
+SODIR		:= so_cpp
 SRCEXT      := cpp
 DEPEXT      := d
 OBJEXT      := o
 
 #Flags, Libraries and Includes
-CXXFLAGS    := -std=c++2a -Wall -Wextra -Werror -O3 -g
+CXXFLAGS    := -std=c++2a -Wall -Wextra -Werror -O3 -g -fPIC
 LIB         := #-lm -larmadillo
-INC         := -I$(INCDIR) -I/usr/local/include
+INC         := -I$(INCDIR) -I /usr/local/include
 INCDEP      := -I$(INCDIR)
+INCSO		:= -shared -Wl
 
 #---------------------------------------------------------------------------------
 #DO NOT EDIT BELOW THIS LINE
@@ -38,7 +41,7 @@ SOURCES     := $(shell find $(SRCDIR) -type f -name *.$(SRCEXT))
 OBJECTS     := $(patsubst $(SRCDIR)/%,$(BUILDDIR)/%,$(SOURCES:.$(SRCEXT)=.$(OBJEXT)))
 
 #Defauilt Make
-all: resources $(TARGET)
+all: directories resources $(TARGET)
 
 #Remake
 re: fclean all
@@ -47,6 +50,10 @@ re: fclean all
 directories:
 	@mkdir -p $(TARGETDIR)
 	@mkdir -p $(BUILDDIR)
+	@mkdir -p $(SODIR)
+ 
+lib: all
+	$(CXX) $(INCSO) -o $(SODIR)/$(SO_TARGET) $(OBJECTS)
 
 #Clean only Objecst
 clean:
@@ -54,6 +61,7 @@ clean:
 
 #Full Clean, Objects and Binaries
 fclean: clean
+	@$(RM) -rf $(SODIR)
 	@$(RM) -rf $(TARGETDIR)
 
 #Pull in dependency info for *existing* .o files

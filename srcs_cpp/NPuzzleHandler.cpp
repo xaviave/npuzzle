@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/15 12:16:15 by xamartin          #+#    #+#             */
-/*   Updated: 2021/04/06 09:51:04 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/04/08 16:42:37 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,14 +18,20 @@
 
 NPuzzleHandler::NPuzzleHandler(const int s_, const std::string &file_name) : puzzle_file(file_name)
 {
-	p = new Puzzle(s_);
-	s = new Puzzle(s_);
+	p = new Node(s_);
+	s = new Node(s_);
+}
+
+NPuzzleHandler::NPuzzleHandler(Node p_, Node s_) : puzzle_file("PY-CPP-NPuzzle")
+{
+	p = new Node(p_.size, p_.grid);
+	s = new Node(s_.size, s_.grid);
+	std::cout << "[DEBUG]:NPuzzleHandler Constructor | addr: " << this << std::endl;
 }
 
 NPuzzleHandler::~NPuzzleHandler(void)
 {
-	delete p;
-	delete s;
+	std::cout << "[DEBUG]:NPuzzleHandler Destructor | addr: " << this << std::endl;
 }
 
 /*
@@ -76,7 +82,7 @@ void	NPuzzleHandler::_generate_puzzle()
     std::default_random_engine e(seed);
 	std::generate(g_.begin(), g_.end(), [n = 0] () mutable { return n++; });
 	std::shuffle(std::begin(g_), std::end(g_), e);
-	if (!this->_is_solvable())
+	if (this->_is_solvable())
 	{
 		std::cout << "Generated Puzzle unsolvable | genarating new one" << std::endl;
 		std::shuffle(std::begin(g_), std::end(g_), e);
@@ -138,10 +144,9 @@ void	NPuzzleHandler::parser()
 
 void	NPuzzleHandler::solve()
 {
-	std::vector<int> t_ = {0, 2, 3, 1, 4, 5, 8, 7, 6};
-	this->p->grid = t_;
-	
 	this->s->_("soluce");
+	this->p->_("puzzle");
 	this->a_star(*(this->p), *(this->s));
+	// handle allocation here
 	std::cout << "Exit Solve" << std::endl;
 }
