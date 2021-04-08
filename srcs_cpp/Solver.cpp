@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/16 10:10:21 by xamartin          #+#    #+#             */
-/*   Updated: 2021/04/08 16:53:36 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/04/08 17:02:43 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,6 @@ Solver::~Solver()
 
 int		Solver::_generate_path_solution(std::shared_ptr<Node> resolve, std::map<size_t, std::shared_ptr<Node> > hash_dict)
 {
-	std::cout << "\n\n\n\n\nSolution founded" << std::endl;
 	resolve->_("rg");
 	std::exit(1);
 	return (resolve->size + hash_dict.size());
@@ -81,10 +80,6 @@ int		Solver::_linear_conflict(const Node& s, const std::vector<int>& grid) const
 				y_g = (r + 1) * s.size + c;
 				x_s = this->get_number_index(s.length, s.grid, grid[x_g]);
 				y_s = this->get_number_index(s.length, s.grid, grid[y_g]);
-				// std::cout << "x_g | " << (x_g / s.size) << " - " << (x_g % s.size) << std::endl;
-				// std::cout << "y_g | " << (y_g / s.size) << " - " << (y_g % s.size) << std::endl;
-				// std::cout << "x_s | " << (x_s / s.size) << " - " << (x_s % s.size) << std::endl;
-				// std::cout << "y_s | " << (y_s / s.size) << " - " << (y_s % s.size) << std::endl;
 				if (grid[x_g] && grid[y_g] &&
 					(int)(x_g / s.size) < (int)(y_g / s.size) &&
 					(int)(x_s / s.size) > (int)(y_s / s.size) &&
