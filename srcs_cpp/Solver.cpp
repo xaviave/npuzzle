@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/16 10:10:21 by xamartin          #+#    #+#             */
-/*   Updated: 2021/04/08 17:02:43 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/04/09 10:58:01 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,11 +31,18 @@ Solver::~Solver()
 ** Private Methods
 */
 
-int		Solver::_generate_path_solution(std::shared_ptr<Node> resolve, std::map<size_t, std::shared_ptr<Node> > hash_dict)
+std::list<Node>	Solver::_generate_path_solution(std::shared_ptr<Node> resolve)
 {
-	resolve->_("rg");
-	std::exit(1);
-	return (resolve->size + hash_dict.size());
+	Node t_(resolve->p_ptr);
+	std::list<Node> data_path;
+
+	data_path.push_front(resolve);
+	while (t_.p_ptr != 0)
+	{
+		data_path.push_front(t_);
+		t_ = Node(t_.p_ptr);
+	}
+	return (data_path);
 }
 
 int		Solver::_linear_conflict(const Node& s, const std::vector<int>& grid) const
@@ -130,14 +137,14 @@ int		Solver::get_number_index(const int length, const std::vector<int>& g, const
 	return length;
 }
 
-int 	Solver::a_star(Node& base, Node& s)
+std::list<Node>	Solver::a_star(Node& base, Node& s)
 {
 	std::hash<std::shared_ptr<Node> > node_hash;
 	std::shared_ptr<Node> b = std::make_shared<Node>(base);
 	std::map<size_t, std::shared_ptr<Node> > hash_dict; // save all nodes
 	std::unordered_set<std::vector<int>, VectorHasher > closeset; // hash table of grid
 	std::priority_queue< std::shared_ptr<Node>, std::vector<std::shared_ptr<Node> >, LowestF> openset; // priority queue
-	
+
 	openset.push(b);
 	hash_dict[node_hash(b)] = b;
 	while (openset.size())
@@ -145,7 +152,7 @@ int 	Solver::a_star(Node& base, Node& s)
 		std::shared_ptr<Node> p = openset.top();
 		openset.pop();
 		if (p->grid == s.grid)
-			return (this->_generate_path_solution(p, hash_dict));
+			return (this->_generate_path_solution(p));
 		if (closeset.find(p->grid) == closeset.end())
 			closeset.insert(p->grid);
 		hash_dict[node_hash(p)] = p;
@@ -174,5 +181,5 @@ int 	Solver::a_star(Node& base, Node& s)
 			}
 		}
 	}
-	return (1);
+	exit(1);
 }

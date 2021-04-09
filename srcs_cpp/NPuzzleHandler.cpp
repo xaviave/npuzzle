@@ -6,7 +6,7 @@
 /*   By: xamartin <xamartin@student.42lyon.fr>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/03/15 12:16:15 by xamartin          #+#    #+#             */
-/*   Updated: 2021/04/08 16:47:07 by xamartin         ###   ########lyon.fr   */
+/*   Updated: 2021/04/09 11:19:24 by xamartin         ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,34 @@ NPuzzleHandler::~NPuzzleHandler(void)
 }
 
 /*
+** Private Methods
+*/
+
+/*
 ** Public Methods
 */
 
-void	NPuzzleHandler::solve()
+PyNode	*NPuzzleHandler::list_to_pynode(std::list<Node> data_path)
+{
+	std::list<Node>::iterator it = data_path.begin();
+	PyNode *py_path = new PyNode[data_path.size()];
+
+	for (size_t i = 0; i < data_path.size(); i++)
+	{
+		py_path[i].t_states = 10;
+		py_path[i].m_states = -24;
+		py_path[i].grid = it->grid.data();
+		it++;
+	}
+	std::cout << data_path.size() << std::endl;
+	return (py_path);
+}
+
+
+PyNode	*NPuzzleHandler::solve()
 {
 	this->s->_("soluce");
 	this->p->_("puzzle");
-	this->a_star(*(this->p), *(this->s));
-	std::cout << "Exit Solve" << std::endl;
+	std::list<Node> data_path = this->a_star(*(this->p), *(this->s));
+	return (this->list_to_pynode(data_path));
 }
