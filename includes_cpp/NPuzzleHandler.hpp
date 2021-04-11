@@ -33,7 +33,6 @@ class NPuzzleHandler : public Solver
 
 		// Methods
 		void	solve();
-
 };
 
 #endif

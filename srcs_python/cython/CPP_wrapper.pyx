@@ -2,17 +2,59 @@ import os
 import ctypes
 import logging
 
-from Node import Node
+from libcpp.vector cimport vector
+from libcpp.memory cimport shared_ptr
 
 
-class Foo(ctypes.Structure):
-    _fields_ = [
-        ("t_states", ctypes.c_int),
-        ("m_states", ctypes.c_int),
-        ("grid", ctypes.c_int * 0),
-    ]
+# c++ interface to cython
+cdef extern from "Node.hpp":
+    cdef cppclass Node:
+        int                 size
+        int                 length
+        int                 f
+        int                 g
+        vector[int]         grid
+        shared_ptr[Node]    p_ptr
+
+        Node(int, int*)
+
+cdef extern from "NPuzzleHandler.hpp":
+    cdef cppclass NPuzzleHandler:
+        Node                p
+        Node                s
+        int                 len_path
+        Node                *path
+
+        NPuzzleHandler(Node, Node)
+        void                solve(void)
+
+cdef class PyNode:
+    cdef Node *n_ptr
+
+    def __cinit__(self, int size, int *grid):
+        self.n_ptr = new Node(size, grid)
+
+    def __dealloc__(self):
+        del self.n_ptr
+
+cdef class PyNPuzzleHandler:
+    cdef NPuzzleHandler *nph_ptr
+
+    def __cinit__(self, size, grid):
+        self.nph_ptr = new NPuzzleHandler(size, grid)
+
+    def __dealloc__(self):
+        del self.nph_ptr
+
+    def solve(self):
+        self.nph_ptr.solve()
+
+    def get_path_node(self, i):
+        return self.nph_ptr.path[i]
+
 
 """
+https://dmtn-013.lsst.io/
 https://gist.github.com/benjaminirving/436262a58f9da5a68532
 https://cython.readthedocs.io/en/latest/src/userguide/wrapping_CPlusPlus.html
 

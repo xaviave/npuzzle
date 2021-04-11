@@ -13,11 +13,13 @@
 #include "NPuzzleHandler.hpp"
 
 extern "C" {
-	PyNode *launch_solver(int size, int *grid, int *solution)
+    Node *create_node(int size, int *grid) { return new Node(size, grid); }
+    NPuzzleHandler *create_npuzzlehandler()
+    void launch_solver(int size, int *grid, int *solution)
 	{
 		Node p(size, grid);
 		Node s(size, solution);
 		NPuzzleHandler nph(p, s);
-		return nph.solve();
+		nph.solve();
 	}
 }
