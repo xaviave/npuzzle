@@ -2,7 +2,7 @@ import os
 import ctypes
 import logging
 
-from libcpp.vector cimport vector
+from libcpp.vector cimport vector, list
 from libcpp.memory cimport shared_ptr
 
 
@@ -22,8 +22,7 @@ cdef extern from "NPuzzleHandler.hpp":
     cdef cppclass NPuzzleHandler:
         Node                p
         Node                s
-        int                 len_path
-        Node                *path
+        list[Node]          path
 
         NPuzzleHandler(Node, Node)
         void                solve(void)
@@ -63,7 +62,6 @@ need to refactor CWrapper to:
     - init Npuzzlehandler and communicate with
     - get a list a C++ obj 
 
-"""
 
 
 class CWrapper:
@@ -73,11 +71,10 @@ class CWrapper:
 
     @staticmethod
     def _list_to_c_int(l: list):
-        """
-        Transform a int list to a c_int array used by the C++ lib
+        # Transform a int list to a c_int array used by the C++ lib
 
-        type(arr) = CWrapper.c_int_Array_9
-        """
+        # type(arr) = CWrapper.c_int_Array_9
+
         arr = (ctypes.c_int * len(l))()
         arr[:] = l[:]
         return arr
@@ -105,3 +102,4 @@ class CWrapper:
         for a in range(9):
             print(arr[a])
         print("cpp return " , len(cpp_ret.contents.grid), type(cpp_ret))
+"""

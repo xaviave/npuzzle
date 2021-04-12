@@ -13,6 +13,7 @@
 #ifndef SOLVER_HPP
 # define SOLVER_HPP
 
+# include <list>
 # include <vector>
 # include <string>
 # include <queue>

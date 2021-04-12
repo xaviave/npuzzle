@@ -24,11 +24,12 @@ class NPuzzleHandler : public Solver
 {
 	public:
 		// Variables
-		Node		*p;
-		Node		*s;
+		Node		    *p;
+		Node		    *s;
+		std::list<Node> path;
 
 		// Constructor - Destructor
-		NPuzzleHandler(Node p_, Node s_);
+		NPuzzleHandler(Node p_, Node s_, std::list<Node> path_);
 		virtual ~NPuzzleHandler(void);
 
 		// Methods

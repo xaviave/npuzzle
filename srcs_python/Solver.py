@@ -4,8 +4,9 @@ import datetime
 
 from Node import Node
 from Parser import Parser
-from CWrapper import CWrapper
 from Heuristic import Heuristic
+
+from cython.CPP_wrapper import PyNode, PyNpuzzleHandler
 
 
 class Solver(Parser):
@@ -132,8 +133,11 @@ resolution time: {datetime.datetime.now() - start}
 
     def _cpp_solver(self):
         logging.warning("Launching C++ module")
-        cw = CWrapper()
-        cw.launch_solver(self.base.size, self.base.grid, self.goal)
+        p_node = PyNode(self.base.size, self.base.grid)
+        s_node = PyNode(self.base.size, self.goal)
+        nph = PyNpuzzleHandler(p_node, s_node)
+        nph.solve()
+
 
     def __init__(self):
         super().__init__()
