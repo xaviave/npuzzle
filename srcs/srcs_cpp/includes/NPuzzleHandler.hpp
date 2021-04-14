@@ -29,11 +29,13 @@ class NPuzzleHandler : public Solver
 		std::list<Node> path;
 
 		// Constructor - Destructor
-		NPuzzleHandler(Node p_, Node s_, std::list<Node> path_);
+		NPuzzleHandler(Node *p_, Node *s_);
 		virtual ~NPuzzleHandler(void);
 
 		// Methods
 		void	solve();
+		int     get_length() const;
+		std::vector<int>    get_path_grid(int pos) const;
 };
 
 #endif

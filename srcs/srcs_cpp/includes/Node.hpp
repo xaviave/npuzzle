@@ -51,8 +51,8 @@ class Node
 		void	_(const std::string &name) const;
 		mptr 	f_move[4] = {&Node::_move_left, &Node::_move_up, &Node::_move_right, &Node::_move_down};
 		void	move(int i, const int z);
-
 	private:
+
 		void	_move_left(const int z);
 		void	_move_up(const int z);
 		void	_move_right(const int z);

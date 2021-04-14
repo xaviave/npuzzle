@@ -63,16 +63,16 @@ class Solver : public Heuristic
 		virtual ~Solver();
 
 		// Methods
-		int		a_star(Node& base, Node& s);
-		int		get_number_index(const int length, const std::vector<int>& g, const int nu) const;
+		std::list<Node>	a_star(Node& base, Node& s);
+		int		        get_number_index(const int length, const std::vector<int>& g, const int nu) const;
 	
 	private:
-		int		_generate_path_solution(std::shared_ptr<Node> resolve, std::map<size_t, std::shared_ptr<Node> > hash_dict);
+		std::list<Node> _generate_path_solution(std::shared_ptr<Node> resolve);
 
 		// heuristic utils
-		int		_get_heuristic(const int a_pos, const int t_pos, const int size) const;
-		int		_linear_conflict(const Node& s, const std::vector<int>& grid) const;
-		int		_calculate_f(const Node& s, const std::vector<int>& p_grid) const;
+		int		        _get_heuristic(const int a_pos, const int t_pos, const int size) const;
+		int		        _linear_conflict(const Node& s, const std::vector<int>& grid) const;
+		int		        _calculate_f(const Node& s, const std::vector<int>& p_grid) const;
 };
 
 #endif

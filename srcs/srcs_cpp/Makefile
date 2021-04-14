@@ -18,11 +18,11 @@ TARGET      := npuzzle
 SO_TARGET	:= lib_npuzzle.so
 
 #The Directories, Source, Includes, Objects, Binary and Resources
-SRCDIR      := srcs_cpp
-INCDIR      := includes_cpp
-BUILDDIR    := objs_cpp
-TARGETDIR   := bin_cpp
-SODIR		:= so_cpp
+SRCDIR      := srcs
+INCDIR      := includes
+BUILDDIR    := objs
+TARGETDIR   := bin
+SODIR		:= so
 SRCEXT      := cpp
 DEPEXT      := d
 OBJEXT      := o

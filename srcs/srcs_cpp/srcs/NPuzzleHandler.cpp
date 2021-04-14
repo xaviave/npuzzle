@@ -10,52 +10,43 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "NPuzzleHandler.hpp"
+#include "../includes/NPuzzleHandler.hpp"
 
 /*
 ** Constructor - Destructor Methods
 */
 
-NPuzzleHandler::NPuzzleHandler(Node p_, Node s_, std::list<Node> path_ = {}) : p(new Node(p_.size, p_.grid)), s(new Node(s_.size, s_.grid)), path(path_)
+NPuzzleHandler::NPuzzleHandler(Node *p_, Node *s_) : p(p_), s(s_), path()
 {
-	std::cout << "[DEBUG]:NPuzzleHandler Constructor | addr: " << this << std::endl;
 }
 
 NPuzzleHandler::~NPuzzleHandler(void)
 {
 	delete p;
 	delete s;
-	std::cout << "[DEBUG]:NPuzzleHandler Destructor | addr: " << this << std::endl;
 }
-
-/*
-** Private Methods
-*/
 
 /*
 ** Public Methods
 */
 
-//
-//PyNode	*NPuzzleHandler::list_to_pynode(std::list<Node> data_path)
-//{
-//	std::list<Node>::iterator it = data_path.begin();
-//	PyNode *py_path = new PyNode[data_path.size()];
-//
-//	for (size_t i = 0; i < data_path.size(); i++)
-//	{
-//		py_path[i].grid = it->grid.data();
-//		it++;
-//	}
-//	std::cout << data_path.size() << std::endl;
-//	return (py_path);
-//}
 
+int     NPuzzleHandler::get_length() const
+{
+    return (this->p->length);
+}
+
+std::vector<int>    NPuzzleHandler::get_path_grid(int pos) const
+{
+    int             i = -1;
+
+    for (auto x: this->path)
+        if (++i == pos)
+            return (x.grid);
+    return (this->path.end()->grid);
+}
 
 void    NPuzzleHandler::solve()
 {
-	this->s->_("soluce");
-	this->p->_("puzzle");
 	this->path = this->a_star(*(this->p), *(this->s));
-	std::cout << "CPP path size: " << this->path.size() << std::endl;
 }

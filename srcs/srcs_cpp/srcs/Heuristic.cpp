@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Heuristic.hpp"
+#include "../includes/Heuristic.hpp"
 
 /*
 ** Constructor - Destructor Methods

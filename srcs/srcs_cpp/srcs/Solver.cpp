@@ -10,8 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Node.hpp"
-#include "Solver.hpp"
+#include "../includes/Node.hpp"
+#include "../includes/Solver.hpp"
 
 /*
 ** Constructor - Destructor Methods
@@ -19,12 +19,10 @@
 
 Solver::Solver()
 {
-	return ;
 }
 
 Solver::~Solver()
 {
-	return ;
 }
 
 /*
@@ -37,11 +35,12 @@ std::list<Node>	Solver::_generate_path_solution(std::shared_ptr<Node> resolve)
 	std::list<Node> data_path;
 
 	data_path.push_front(resolve);
-	while (t_.p_ptr != 0)
+	while (t_.p_ptr != nullptr)
 	{
 		data_path.push_front(t_);
 		t_ = Node(t_.p_ptr);
 	}
+	std::cout << data_path.size() << " movements done to find the solution" << std::endl;
 	return (data_path);
 }
 
@@ -139,6 +138,7 @@ int		Solver::get_number_index(const int length, const std::vector<int>& g, const
 
 std::list<Node>	Solver::a_star(Node& base, Node& s)
 {
+    int time = 0;
 	std::hash<std::shared_ptr<Node> > node_hash;
 	std::shared_ptr<Node> b = std::make_shared<Node>(base);
 	std::map<size_t, std::shared_ptr<Node> > hash_dict; // save all nodes
@@ -149,10 +149,14 @@ std::list<Node>	Solver::a_star(Node& base, Node& s)
 	hash_dict[node_hash(b)] = b;
 	while (openset.size())
 	{
+	    time++;
 		std::shared_ptr<Node> p = openset.top();
 		openset.pop();
 		if (p->grid == s.grid)
+		{
+            std::cout << "complexity in time: " << time << " | complexity in space: " << closeset.size() << std::endl;
 			return (this->_generate_path_solution(p));
+		}
 		if (closeset.find(p->grid) == closeset.end())
 			closeset.insert(p->grid);
 		hash_dict[node_hash(p)] = p;

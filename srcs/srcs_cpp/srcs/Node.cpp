@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Node.hpp"
+#include "../includes/Node.hpp"
 
 /*
 ** Constructor - Destructor Methods
@@ -20,22 +20,18 @@ Node::Node(const int s_, int * grid_) : size(s_), length(std::pow(s_, 2)), f(0),
 {
 	for (int i = 0; i < length; i++)
 		grid[i] = grid_[i];
-	// std::cout << "[DEBUG]:Node Constructor | addr: " << this << std::endl;
 }
 
 Node::Node(const int s_, std::vector<int> grid_) : size(s_), length(std::pow(s_, 2)), f(0), g(0), grid(grid_), p_ptr(0x0)
 {
-	// std::cout << "[DEBUG]:Node Constructor | addr: " << this << std::endl;
 }
 
 Node::Node(std::shared_ptr<Node> obj) : size(obj->size), length(obj->length), f(obj->f), g(obj->g), grid(obj->grid), p_ptr(obj->p_ptr)
 {
-	// std::cout << "[DEBUG]:Node Constructor | addr: " << this << std::endl;
 }
 
 Node::~Node(void)
 {
-	// std::cout << "[DEBUG]:Node Destructor | addr: " << this << std::endl;
 }
 
 /*

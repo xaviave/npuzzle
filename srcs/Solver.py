@@ -6,8 +6,6 @@ from Node import Node
 from Parser import Parser
 from Heuristic import Heuristic
 
-from cython.CPP_wrapper import PyNode, PyNpuzzleHandler
-
 
 class Solver(Parser):
     COST: int = 1
@@ -77,7 +75,7 @@ class Solver(Parser):
         with open(self.args.solution_file, "w") as fd:
             fd.write("\n".join([x.__str__() for x in path]))
 
-    def _get_path(self, start: datetime.datetime, end: Node):
+    def _get_path(self, start: datetime.datetime, end: Node, ctime: int, stime: int):
         logging.info("Solution founded")
         n: Node = end
         path: list = [end]
@@ -87,7 +85,8 @@ class Solver(Parser):
         path = path[::-1]
         print(
             f"""
-number of node explored: {len(self.hash_dict)}
+complexity in time: {ctime}
+complexity in size: {stime}
 {len(path)} movements done to find the solution
 resolution time: {datetime.datetime.now() - start}
 """
@@ -104,6 +103,7 @@ resolution time: {datetime.datetime.now() - start}
         - CLOSESET data structure
             A container that easily allows to check whether a node currently is in the set or not
         """
+        ctime = 0
         start = datetime.datetime.now()
         closeset: list = []
         openset: list = [self.base]
@@ -111,9 +111,10 @@ resolution time: {datetime.datetime.now() - start}
 
         c_append = closeset.append
         while len(openset):
+            ctime += 1
             p = heapq.heappop(openset)
             if p.grid == self.goal:
-                return self._get_path(start, p)
+                return self._get_path(start, p, ctime, len(closeset))
             self.hash_dict[hash(p)] = p
             c_append(p.grid)
             z = p.grid.index(0)
@@ -132,12 +133,14 @@ resolution time: {datetime.datetime.now() - start}
                         openset[n].parent = s.parent
 
     def _cpp_solver(self):
-        logging.warning("Launching C++ module")
-        p_node = PyNode(self.base.size, self.base.grid)
-        s_node = PyNode(self.base.size, self.goal)
-        nph = PyNpuzzleHandler(p_node, s_node)
-        nph.solve()
+        from srcs_cython import cpp_wrapper
 
+        logging.warning("Launching C++ module")
+        p_node = cpp_wrapper.create_node(self.base.size, self.base.grid)
+        s_node = cpp_wrapper.create_node(self.base.size, self.goal)
+        nph = cpp_wrapper.create_npuzzlehandler(p_node, s_node)
+        nph.solve()
+        self._save_in_file(nph.path)
 
     def __init__(self):
         super().__init__()
