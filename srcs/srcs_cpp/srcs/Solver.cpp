@@ -185,5 +185,6 @@ std::list<Node>	Solver::a_star(Node& base, Node& s)
 			}
 		}
 	}
+	std::cout << "Solution not founded" << std::endl;
 	exit(1);
 }
