@@ -368,5 +368,5 @@ healthchecksdb
 MigrationBackup/
 
 .idea/*
-bin_cpp/*
-so_cpp/*
+srcs/cpp/bin/*
+srcs/cpp/so/*

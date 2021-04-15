@@ -119,9 +119,7 @@ int		Solver::_calculate_f(const Node& s, const std::vector<int>& p_grid) const
 			this->get_number_index(s.length, p_grid, i),
 			this->get_number_index(s.length, s.grid, i),
 			s.size);
-	if (this->h == 5)
-		h += this->_linear_conflict(s, p_grid);
-	return (h);
+	return (h + this->_linear_conflict(s, p_grid));
 }
 
 /*
@@ -185,6 +183,6 @@ std::list<Node>	Solver::a_star(Node& base, Node& s)
 			}
 		}
 	}
-	std::cout << "Solution not founded" << std::endl;
+	std::cout << "Solution not found" << std::endl;
 	exit(1);
 }

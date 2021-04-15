@@ -130,7 +130,6 @@ class Node(Heuristic):
         self.moves = [self._rigth, self._up, self._down, self._left]
         if kwargs is not None:
             self._init_kwargs(kwargs)
-            print(self)
 
     def __str__(self):
         s = f"\n________________________\nh = {self.h} | g = {self.g} | f = {self.f}\n"

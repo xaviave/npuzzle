@@ -72,6 +72,7 @@ class Solver(Parser):
         )
 
     def _save_in_file(self, path: list):
+        logging.warning(f"Saving solution in file: '{self.args.solution_file}'")
         with open(self.args.solution_file, "w") as fd:
             fd.write("\n".join([x.__str__() for x in path]))
 
