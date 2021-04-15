@@ -124,16 +124,10 @@ class Parser(ArgParser):
         grid = list(
             map(
                 int,
-                map(
-                    int,
-                    list(
-                        itertools.chain(
-                            *[
-                                list(filter(None, x.group().split(" ")))
-                                for x in fdata[1:]
-                            ]
-                        )
-                    ),
+                list(
+                    itertools.chain(
+                        *[list(filter(None, x.group().split(" "))) for x in fdata[1:]]
+                    )
                 ),
             )
         )

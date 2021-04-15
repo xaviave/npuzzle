@@ -131,13 +131,18 @@ class Node(Heuristic):
         if kwargs is not None:
             self._init_kwargs(kwargs)
 
-    def __str__(self):
-        s = f"\n________________________\nh = {self.h} | g = {self.g} | f = {self.f}\n"
-        for i, n in enumerate(self.grid):
-            if i != 0 and (i % self.size) == 0:
+    @staticmethod
+    def __grid__(size: int, grid: list):
+        s = ""
+        for i, n in enumerate(grid):
+            if i != 0 and (i % size) == 0:
                 s += "\n"
-            s += f"{n} "
-        return s + "\n________________________"
+            s += f"{int(n)} "
+        return s + "\n___________________"
+
+    def __str__(self):
+        s = f"\n___________________\nh = {self.h} | g = {self.g} | f = {self.f}\n"
+        return s + self.__grid__(self.size, self.grid)
 
     def __lt__(self, other):
         return self.f < other.f

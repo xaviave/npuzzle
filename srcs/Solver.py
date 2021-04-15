@@ -71,10 +71,10 @@ class Solver(Parser):
             default=Heuristic.manhattan_distance,
         )
 
-    def _save_in_file(self, path: list):
+    def _save_in_file(self, size: int, path: list):
         logging.warning(f"Saving solution in file: '{self.args.solution_file}'")
         with open(self.args.solution_file, "w") as fd:
-            fd.write("\n".join([x.__str__() for x in path]))
+            fd.write("\n".join([Node().__grid__(size, x) for x in path]))
 
     def _get_path(self, start: datetime.datetime, end: Node, ctime: int, stime: int):
         logging.info("Solution founded")
@@ -92,7 +92,7 @@ complexity in size: {stime}
 resolution time: {datetime.datetime.now() - start}
 """
         )
-        self._save_in_file(path)
+        self._save_in_file(end.size, [p.grid for p in path])
         return path
 
     def _solver(self):
@@ -141,7 +141,7 @@ resolution time: {datetime.datetime.now() - start}
         s_node = cpp_wrapper.create_node(self.base.size, self.goal)
         nph = cpp_wrapper.create_npuzzlehandler(p_node, s_node)
         nph.solve()
-        self._save_in_file(nph.path)
+        self._save_in_file(self.base.size, [self.base.grid, *nph.path])
 
     def __init__(self):
         super().__init__()
